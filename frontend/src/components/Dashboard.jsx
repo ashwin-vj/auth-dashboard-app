@@ -209,7 +209,7 @@ function Dashboard({ token, user, setToken, setUser }) {
   // Fetch all users
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/users', {
+      const res = await axios.get('https://auth-dashboard-app-l1iq.onrender.com/api/users', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(res.data);
@@ -251,12 +251,12 @@ function Dashboard({ token, user, setToken, setUser }) {
     try {
       if (editingUser) {
         // Update user
-        await axios.put(`http://localhost:5000/api/users/${editingUser.id}`, form, {
+        await axios.put(`https://auth-dashboard-app-l1iq.onrender.com/api/users/${editingUser.id}`, form, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else {
         // Create user
-        await axios.post('http://localhost:5000/api/users', form, {
+        await axios.post('https://auth-dashboard-app-l1iq.onrender.com/api/users', form, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
@@ -271,7 +271,7 @@ function Dashboard({ token, user, setToken, setUser }) {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/users/${id}`, {
+        await axios.delete(`https://auth-dashboard-app-l1iq.onrender.com/api/users/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         fetchUsers();
