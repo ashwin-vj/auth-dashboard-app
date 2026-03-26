@@ -31,7 +31,7 @@ function Login({ setToken, setUser }) {
             setUser(res.data.user); 
             navigate('/dashboard');
         } else {
-            setMessage('✅ Registration successful! Please login.');
+            setMessage('Registration successful! Please login.');
             setIsLogin(true);
             setForm({ name: '', email: '', password: '' });
         }

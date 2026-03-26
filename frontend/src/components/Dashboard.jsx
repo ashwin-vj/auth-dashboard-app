@@ -168,7 +168,16 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './styles/Dashboard.scss';
 import { useNavigate } from 'react-router-dom';
-import { FiEdit, FiTrash2, FiPlus, FiSettings, FiLogOut } from 'react-icons/fi';
+import { FiEdit, FiTrash2, FiPlus, FiSettings, FiLogOut, FiBell } from 'react-icons/fi';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid
+} from 'recharts';
 
 function Dashboard({ token, user, setToken, setUser }) {
   const [users, setUsers] = useState([]);
@@ -179,8 +188,46 @@ function Dashboard({ token, user, setToken, setUser }) {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const dropdownRef = useRef();
   const navigate = useNavigate();
+  const [notifOpen, setNotifOpen] = useState(false);
+  // Dummy statistics (later connect to API)
+  const stats = {
+    clients: 128,
+    gstFilings: 42,
+    audits: 19,
+    pending: 5,
+    revenue: "₹4.5L"
+  };
 
-  // Profile dropdown
+  const notifications = [
+    "GST Filing submitted for ABC Pvt Ltd",
+    "Audit completed for XYZ Ltd",
+    "New client registered",
+    "ITR filing deadline approaching"
+  ];
+
+  const revenueData = [
+    { month: "Jan", revenue: 20000, gst: 10, audit: 4 },
+    { month: "Feb", revenue: 28000, gst: 15, audit: 6 },
+    { month: "Mar", revenue: 35000, gst: 18, audit: 7 },
+    { month: "Apr", revenue: 42000, gst: 20, audit: 9 },
+    { month: "May", revenue: 50000, gst: 25, audit: 11 }
+  ];
+
+  const activities = [
+    "ABC Pvt Ltd - GST Filed",
+    "XYZ Ltd - Audit Started",
+    "DEF Ltd - ITR Submitted",
+    "GHI Ltd - Documents Uploaded"
+  ];
+
+  const deadlines = [
+    "GST Return - 30 March",
+    "ITR Filing - 10 April",
+    "Audit Submission - 20 April"
+  ];
+
+  // Logout and profile dropdown logic
+
   const handleLogout = () => {
     setToken(null);
     setUser(null);
@@ -225,7 +272,7 @@ function Dashboard({ token, user, setToken, setUser }) {
 
   useEffect(() => {
     fetchUsers();
-  }, [token, setToken, navigate, setUser]);
+  }, [token]);
 
   // Handle form change
   const handleChange = (e) => {
@@ -285,22 +332,45 @@ function Dashboard({ token, user, setToken, setUser }) {
     <div className="dashboard">
       <header className="dashboard-header">
         <h1>{user ? `${user.name}'s Dashboard` : 'Dashboard'}</h1>
-        <div className="profile" ref={dropdownRef}>
-          <div className="profile-btn" onClick={toggleDropdown}>
-            <div className="avatar">{user?.name[0]}</div>
-          </div>
-          {dropdownOpen && (
-            <div className="dropdown-menu">
-              <button onClick={handleSettings}><FiSettings />Settings</button>
-              <button onClick={handleLogout} className="logout-btn"><FiLogOut />Logout</button>
+                  <div className="header-right">
+
+          {/* Notifications */}
+          <div className="notifications">
+            <div className="bell" onClick={() => setNotifOpen(!notifOpen)}>
+              <FiBell />
+              <span className="badge">{notifications.length}</span>
             </div>
-          )}
+
+            {notifOpen && (
+              <div className="notif-dropdown">
+                {notifications.map((n, i) => (
+                  <p key={i}>{n}</p>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Profile */}
+          <div className="profile" ref={dropdownRef}>
+            <div className="profile-btn" onClick={toggleDropdown}>
+              <div className="avatar">{user?.name[0]}</div>
+            </div>
+            {dropdownOpen && (
+              <div className="dropdown-menu">
+                <button onClick={handleSettings}><FiSettings />Settings</button>
+                <button onClick={handleLogout} className="logout-btn"><FiLogOut />Logout</button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
+      USERS SECTION
       <div className="crud-header">
         <h2>All Users</h2>
-        <button className="create-btn" onClick={() => openModal()}><FiPlus />Add User</button>
+        <button className="create-btn" onClick={() => openModal()}>
+          <FiPlus /> Add User
+        </button>
       </div>
 
       {loading ? (
@@ -316,15 +386,98 @@ function Dashboard({ token, user, setToken, setUser }) {
                 <span>Joined: {new Date(u.created_at).toLocaleDateString()}</span>
               </div>
               <div className="card-actions">
-                <button className="edit-btn" onClick={() => openModal(u)}><FiEdit />Edit</button>
-                <button className="delete-btn" onClick={() => handleDelete(u.id)}><FiTrash2 />Delete</button>
+                <button className="edit-btn" onClick={() => openModal(u)}>
+                  <FiEdit /> Edit
+                </button>
+                <button className="delete-btn" onClick={() => handleDelete(u.id)}>
+                  <FiTrash2 /> Delete
+                </button>
               </div>
             </div>
           ))}
         </div>
       )}
 
-      {/* Modal */}
+      <div className="stats-cards">
+
+        <div className="stat-card">
+          <h4>Total Clients</h4>
+          <p>{stats.clients}</p>
+        </div>
+
+        <div className="stat-card">
+          <h4>Active GST Filings</h4>
+          <p>{stats.gstFilings}</p>
+        </div>
+
+        <div className="stat-card">
+          <h4>Completed Audits</h4>
+          <p>{stats.audits}</p>
+        </div>
+
+        <div className="stat-card">
+          <h4>Pending Tasks</h4>
+          <p>{stats.pending}</p>
+        </div>
+
+        <div className="stat-card">
+          <h4>Total Revenue</h4>
+          <p>{stats.revenue}</p>
+        </div>
+
+      </div>
+
+      <div className="chart-section">
+
+        <h2>Business Performance</h2>
+
+        <ResponsiveContainer width="100%" height={300}>
+
+          <LineChart data={revenueData}>
+
+            <CartesianGrid strokeDasharray="3 3" />
+
+            <XAxis dataKey="month" />
+            <YAxis />
+
+            <Tooltip />
+
+            <Line type="monotone" dataKey="revenue" stroke="#7c3aed" strokeWidth={3} />
+
+            <Line type="monotone" dataKey="gst" stroke="#10b981" strokeWidth={2} />
+
+            <Line type="monotone" dataKey="audit" stroke="#f97316" strokeWidth={2} />
+
+          </LineChart>
+
+        </ResponsiveContainer>
+
+      </div>
+
+
+      {/* Activity + Deadlines */}
+      <div className="dashboard-panels">
+
+        <div className="panel">
+          <h3>Recent Activity</h3>
+          <ul>
+            {activities.map((a, i) => (
+              <li key={i}>{a}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="panel">
+          <h3>Upcoming Deadlines</h3>
+          <ul>
+            {deadlines.map((d, i) => (
+              <li key={i}>{d}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* Modal remains same (your existing code) */}
       {modalOpen && (
         <div className="modal-overlay">
           <div className="modal">

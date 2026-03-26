@@ -1,62 +1,6 @@
-// .login-container {
-//   max-width: 400px;
-//   margin: 100px auto;
-//   padding: 40px 30px;
-//   background: #fff;
-//   border-radius: 12px;
-//   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-//   text-align: center;
-
-//   h2 {
-//     margin-bottom: 30px;
-//     color: #333;
-//   }
-
-//   input {
-//     width: 100%;
-//     padding: 14px;
-//     margin: 10px 0;
-//     border: 1px solid #ddd;
-//     border-radius: 8px;
-//     font-size: 16px;
-//   }
-
-//   button {
-//     width: 100%;
-//     padding: 14px;
-//     margin-top: 15px;
-//     background: #007bff;
-//     color: white;
-//     border: none;
-//     border-radius: 8px;
-//     font-size: 16px;
-//     cursor: pointer;
-
-//     &:hover {
-//       background: #0056b3;
-//     }
-//   }
-
-//   .toggle {
-//     margin-top: 20px;
-//     color: #007bff;
-//     cursor: pointer;
-
-//     &:hover {
-//       text-decoration: underline;
-//     }
-//   }
-
-//   .message {
-//     margin-top: 15px;
-//     color: red;
-//   }
-// }
-
-
 .login-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f0c29, #baaecf, #421d83);
+  background: linear-gradient(135deg, #0f0c29, #baaecf, #66479c);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,12 +47,6 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-
-//   .subtitle {
-//     color: rgba(255, 255, 255, 0.7);
-//     margin-bottom: 35px;
-//     font-size: 1rem;
-//   }
 
   input {
     width: 88%;
