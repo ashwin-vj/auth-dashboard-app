@@ -9,6 +9,7 @@ function Login({ setToken, setUser }) {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -76,15 +77,24 @@ function Login({ setToken, setUser }) {
               required 
             />
 
-            <input 
-              type="password" 
-              name="password" 
-              placeholder="Password" 
-              value={form.password}
-              onChange={handleChange} 
-              required 
-            />
+            <div className="password-field">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                value={form.password}
+                onChange={handleChange}
+                required
+              />
 
+              <span
+                className="toggle-eye"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </span>
+            </div>
+            
             <button type="submit" disabled={loading}>
               {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
             </button>
