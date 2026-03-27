@@ -187,6 +187,8 @@ function Dashboard({ token, user, setToken, setUser }) {
   const [editingUser, setEditingUser] = useState(null);
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const dropdownRef = useRef();
+  const notifRef = useRef();
+  const adduserRef = useRef();
   const navigate = useNavigate();
   const [notifOpen, setNotifOpen] = useState(false);
   // Dummy statistics (later connect to API)
@@ -247,6 +249,12 @@ function Dashboard({ token, user, setToken, setUser }) {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
+      }
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+      setNotifOpen(false);
+      }
+      if (adduserRef && adduserRef.current && !adduserRef.current.contains(event.target)) {
+        closeModal();
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -335,7 +343,7 @@ function Dashboard({ token, user, setToken, setUser }) {
                   <div className="header-right">
 
           {/* Notifications */}
-          <div className="notifications">
+          <div className="notifications" ref={notifRef}>
             <div className="bell" onClick={() => setNotifOpen(!notifOpen)}>
               <FiBell />
               <span className="badge">{notifications.length}</span>
@@ -366,7 +374,7 @@ function Dashboard({ token, user, setToken, setUser }) {
       </header>
 
       USERS SECTION
-      <div className="crud-header">
+      <div className="crud-header" ref={adduserRef}>
         <h2>All Users</h2>
         <button className="create-btn" onClick={() => openModal()}>
           <FiPlus /> Add User
