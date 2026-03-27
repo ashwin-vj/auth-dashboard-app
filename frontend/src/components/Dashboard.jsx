@@ -253,9 +253,6 @@ function Dashboard({ token, user, setToken, setUser }) {
       if (notifRef.current && !notifRef.current.contains(event.target)) {
       setNotifOpen(false);
       }
-      if (adduserRef && adduserRef.current && !adduserRef.current.contains(event.target)) {
-        closeModal();
-      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -374,7 +371,7 @@ function Dashboard({ token, user, setToken, setUser }) {
       </header>
 
       USERS SECTION
-      <div className="crud-header" ref={adduserRef}>
+      <div className="crud-header">
         <h2>All Users</h2>
         <button className="create-btn" onClick={() => openModal()}>
           <FiPlus /> Add User
