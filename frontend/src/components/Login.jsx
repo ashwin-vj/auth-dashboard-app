@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import './styles/Login.scss';
 import { useNavigate } from 'react-router-dom';
-
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 function Login({ setToken, setUser }) {
   const [isLogin, setIsLogin] = useState(true);
