@@ -188,9 +188,19 @@ function Dashboard({ token, user, setToken, setUser }) {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const dropdownRef = useRef();
   const notifRef = useRef();
-  const adduserRef = useRef();
   const navigate = useNavigate();
   const [notifOpen, setNotifOpen] = useState(false);
+  const [toast, setToast] = useState({ show: false, message: '', type: '' });
+  const [deleteUserId, setDeleteUserId] = useState(null);
+
+  const showToast = (message, type = "success") => {
+    setToast({ show: true, message, type });
+
+    setTimeout(() => {
+      setToast({ show: false, message: '', type: '' });
+    }, 3000);
+  };
+
   // Dummy statistics (later connect to API)
   const stats = {
     clients: 128,
@@ -277,6 +287,7 @@ function Dashboard({ token, user, setToken, setUser }) {
 
   useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line
   }, [token]);
 
   // Handle form change
@@ -314,23 +325,31 @@ function Dashboard({ token, user, setToken, setUser }) {
       }
       closeModal();
       fetchUsers();
+      showToast(
+        editingUser ? "User updated successfully" : "User added successfully",
+        "success"
+      );
     } catch (err) {
       alert(err.response?.data?.message || 'Error occurred');
     }
   };
 
-  // Delete user
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      try {
-        await axios.delete(`https://auth-dashboard-app-l1iq.onrender.com/api/users/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        fetchUsers();
-      } catch (err) {
-        alert(err.response?.data?.message || 'Error occurred');
-      }
+  const handleDelete = (id) => {
+    setDeleteUserId(id);
+  };
+  const confirmDelete = async () => {
+    try {
+
+      await axios.delete(`https://auth-dashboard-app-l1iq.onrender.com/api/users/${deleteUserId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      fetchUsers();
+      showToast("User deleted successfully", "danger");
+    } catch (err) {
+      showToast("Failed to delete user", "danger");
     }
+    setDeleteUserId(null);
   };
 
   return (
@@ -459,7 +478,6 @@ function Dashboard({ token, user, setToken, setUser }) {
 
       </div>
 
-
       {/* Activity + Deadlines */}
       <div className="dashboard-panels">
 
@@ -518,6 +536,38 @@ function Dashboard({ token, user, setToken, setUser }) {
               </div>
             </form>
           </div>
+        </div>
+      )}
+      {deleteUserId && (
+        <div className="modal-overlay">
+          <div className="modal delete-modal">
+
+            <h3>Delete User</h3>
+
+            <p>Are you sure you want to delete this user?</p>
+
+            <div className="modal-actions">
+              <button
+                className="delete-confirm-btn"
+                onClick={confirmDelete}
+              >
+                Delete
+              </button>
+
+              <button
+                className="cancel-btn"
+                onClick={() => setDeleteUserId(null)}
+              >
+                Cancel
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+      {toast.show && (
+        <div className={`toast ${toast.type}`}>
+          {toast.message}
         </div>
       )}
     </div>
