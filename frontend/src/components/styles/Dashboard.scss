@@ -1,7 +1,10 @@
+.dashboard-layout {
+  display: flex;
+
+
 .dashboard {
-  padding: 30px;
-  max-width: 1200px;
-  margin: 0 auto;
+  margin-left: 110px;
+  width: 90%;
   font-family: 'Segoe UI', system-ui, sans-serif;
   color: #333;
 
@@ -514,6 +517,7 @@
       opacity: 1;
     }
   }
+}
 }
 
 // Responsive

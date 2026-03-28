@@ -178,6 +178,7 @@ import {
   ResponsiveContainer,
   CartesianGrid
 } from 'recharts';
+import Sidebar from "../components/Sidebar";
 
 function Dashboard({ token, user, setToken, setUser }) {
   const [users, setUsers] = useState([]);
@@ -353,6 +354,8 @@ function Dashboard({ token, user, setToken, setUser }) {
   };
 
   return (
+    <div className="dashboard-layout">
+      <Sidebar />
     <div className="dashboard">
       <header className="dashboard-header">
         <h1>{user ? `${user.name}'s Dashboard` : 'Dashboard'}</h1>
@@ -570,6 +573,7 @@ function Dashboard({ token, user, setToken, setUser }) {
           {toast.message}
         </div>
       )}
+    </div>
     </div>
   );
 }
