@@ -218,6 +218,8 @@ function Dashboard({ token, user, setToken, setUser }) {
     "ITR filing deadline approaching"
   ];
 
+  const [unreadCount, setUnreadCount] = useState(notifications.length);
+
   const revenueData = [
     { month: "Jan", revenue: 20000, gst: 10, audit: 4 },
     { month: "Feb", revenue: 28000, gst: 15, audit: 6 },
@@ -353,19 +355,29 @@ function Dashboard({ token, user, setToken, setUser }) {
     setDeleteUserId(null);
   };
 
+  const toggleNotifications = () => {
+    setNotifOpen(!notifOpen);
+
+    if (!notifOpen) {
+      setUnreadCount(0);
+    }
+  };
+
   return (
     <div className="dashboard-layout">
       <Sidebar />
     <div className="dashboard">
       <header className="dashboard-header">
         <h1>{user ? `${user.name}'s Dashboard` : 'Dashboard'}</h1>
-                  <div className="header-right">
+          <div className="header-right">
 
           {/* Notifications */}
           <div className="notifications" ref={notifRef}>
-            <div className="bell" onClick={() => setNotifOpen(!notifOpen)}>
+            <div className="bell" onClick={toggleNotifications}>
               <FiBell />
-              <span className="badge">{notifications.length}</span>
+              {unreadCount > 0 && (
+                <span className="badge">{unreadCount}</span>
+              )}
             </div>
 
             {notifOpen && (
